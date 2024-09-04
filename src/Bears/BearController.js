@@ -19,17 +19,17 @@ const createBear = async (req, res) => {
   }
 };
 
-const getBears = (req, res) => {
-  Bear.find({})
-    .then((allBears) => {
-      res.status(200).json({ allBears });
-    })
-    .catch((error) => {
-      res.status(200).json({
-        error: "Whatever",
-      });
-    });
-};
+// const getBears = (req, res) => {
+//   Bear.find({})
+//     .then((allBears) => {
+//       res.status(200).json({ allBears });
+//     })
+//     .catch((error) => {
+//       res.status(200).json({
+//         error: "Whatever",
+//       });
+//     });
+// };
 
 const getBearById = (req, res) => {
   const { id } = req.params;
@@ -41,10 +41,43 @@ const getBearById = (req, res) => {
       res.status(400).json({ error: "Whatever" });
     });
 };
-// const getBears = async (req, res) => {
-//   try {
-//     const allBears = await Bear.find({});
-//     res.status(200).json({ allBears });
-//   } catch (error) {}
-// };
-module.exports = { blahFuction, createBear, getBears };
+const getBears = async (req, res) => {
+  try {
+    const allBears = await Bear.find({});
+    res.status(200).json({ allBears });
+  } catch (error) {
+    console.log(error);
+  }
+};
+const deleteBearById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Bear.findByIdAndDelete(id);
+    res.status(204).json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error: "Could Not delete bhalu" });
+  }
+};
+const updateBearById = async (req, res) => {
+  const { id } = req.params;
+  const { species, latinName } = req.body;
+  try {
+    const bear = await Bear.findByIdAndUpdate(
+      id,
+      { species, latinName },
+      { new: true }
+    );
+    res.status(202).json(bear);
+  } catch (error) {
+    res.status(400).json({ error: "Could Not update bhalu" });
+  }
+};
+
+module.exports = {
+  blahFuction,
+  createBear,
+  getBears,
+  getBearById,
+  deleteBearById,
+  updateBearById,
+};
